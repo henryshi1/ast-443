@@ -2,6 +2,7 @@
 Observational Techniques in Astronomy
 # Syllabus
 Fall 2022, Stony Brook University
+
 Instructor: Anja von der Linden
 
 # Acknowledgements
@@ -19,3 +20,7 @@ Labs:
 2. Detections of Transits of Extrasolar Planets
 3. Diffuse Nebula Spectroscopy
 4. Determining the Distance of DY Pegasi
+
+# Packages Used
+* AASTeX
+* AstroPy
