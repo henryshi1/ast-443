@@ -1,0 +1,16 @@
+#! /bin/bash -u
+
+for file in $(ls -l Calib10s/calibscience.00000???.fits)
+do
+    sex ${file} -c default.se -CATALOG_NAME Calib10s/${file}.cat
+done
+
+for file in $(ls -l Calib12s/calibscience.00000???.fits)
+do
+    sex ${file} -c default.se -CATALOG_NAME Calib12s/${file}.cat
+done
+
+for file in $(ls -l Calib20s/calibscience.00000???.fits)
+do
+    sex ${file} -c default.se -CATALOG_NAME Calib20s/${file}.cat
+done
