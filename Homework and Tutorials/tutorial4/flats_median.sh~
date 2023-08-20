@@ -1,0 +1,11 @@
+ftpixcalc flats.med.fits bitpix=-32 "MEDIAN({a,b,c,d,e,g,h,i,j,k})" 
+a=flats.00002625.FIT
+b=flats.00002626.FIT
+c=flats.00002627.FIT
+d=flats.00002628.FIT
+e=flats.00002629.FIT
+g=flats.00002630.FIT
+h=flats.00002631.FIT
+i=flats.00002632.FIT
+j=flats.00002633.FIT
+k=flats.00002634.FIT
