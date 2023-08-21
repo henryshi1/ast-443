@@ -1,0 +1,3 @@
+\tilde{\Phi} refers to counts in blue band, \Phi is counts in visible band. Subscripts of 1 for these represent DY Pegasi values, 2 is the appropriate reference star. A, B, C, and D are coefficients for period-luminosity law in the forms:
+M_V = A + B log(P)
+M_B = C + D log(P)
