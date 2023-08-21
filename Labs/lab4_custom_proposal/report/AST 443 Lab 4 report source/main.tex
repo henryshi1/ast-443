@@ -1,0 +1,871 @@
+%% AASTeX requires revtex4-1.cls and other external packages such as
+%% latexsym, graphicx, amssymb, longtable, and epsf.  Note that as of 
+%% Oct 2020, APS now uses revtex4.2e for its journals but remember that 
+%% AASTeX v6+ still uses v4.1. All of these external packages should 
+%% already be present in the modern TeX distributions but not always.
+%% For example, revtex4.1 seems to be missing in the linux version of
+%% TexLive 2020. One should be able to get all packages from www.ctan.org.
+%% In particular, revtex v4.1 can be found at 
+%% https://www.ctan.org/pkg/revtex4-1.
+
+%% The first piece of markup in an AASTeX v6.x document is the \documentclass
+%% command. LaTeX will ignore any data that comes before this command. The 
+%% documentclass can take an optional argument to modify the output style.
+%% The command below calls the preprint style which will produce a tightly 
+%% typeset, one-column, single-spaced document.  It is the default and thus
+%% does not need to be explicitly stated.
+%%
+%% using aastex version 6.3
+\documentclass[twocolumn]{aastex631}
+
+%% The default is a single spaced, 10 point font, single spaced article.
+%% There are 5 other style options available via an optional argument. They
+%% can be invoked like this:
+%%
+%% \documentclass[arguments]{aastex631}
+%% 
+%% where the layout options are:
+%%
+%%  twocolumn   : two text columns, 10 point font, single spaced article.
+%%                This is the most compact and represent the final published
+%%                derived PDF copy of the accepted manuscript from the publisher
+%%  manuscript  : one text column, 12 point font, double spaced article.
+%%  preprint    : one text column, 12 point font, single spaced article.  
+%%  preprint2   : two text columns, 12 point font, single spaced article.
+%%  modern      : a stylish, single text column, 12 point font, article with
+%% 		  wider left and right margins. This uses the Daniel
+%% 		  Foreman-Mackey and David Hogg design.
+%%  RNAAS       : Supresses an abstract. Originally for RNAAS manuscripts 
+%%                but now that abstracts are required this is obsolete for
+%%                AAS Journals. Authors might need it for other reasons. DO NOT
+%%                use \begin{abstract} and \end{abstract} with this style.
+%%
+%% Note that you can submit to the AAS Journals in any of these 6 styles.
+%%
+%% There are other optional arguments one can invoke to allow other stylistic
+%% actions. The available options are:
+%%
+%%   astrosymb    : Loads Astrosymb font and define \astrocommands. 
+%%   tighten      : Makes baselineskip slightly smaller, only works with 
+%%                  the twocolumn substyle.
+%%   times        : uses times font instead of the default
+%%   linenumbers  : turn on lineno package.
+%%   trackchanges : required to see the revision mark up and print its output
+%%   longauthor   : Do not use the more compressed footnote style (default) for 
+%%                  the author/collaboration/affiliations. Instead print all
+%%                  affiliation information after each name. Creates a much 
+%%                  longer author list but may be desirable for short 
+%%                  author papers.
+%% twocolappendix : make 2 column appendix.
+%%   anonymous    : Do not show the authors, affiliations and acknowledgments 
+%%                  for dual anonymous review.
+%%
+%% these can be used in any combination, e.g.
+%%
+%% \documentclass[twocolumn,linenumbers,trackchanges]{aastex631}
+%%
+%% AASTeX v6.* now includes \hyperref support. While we have built in specific
+%% defaults into the classfile you can manually override them with the
+%% \hypersetup command. For example,
+%%
+%% \hypersetup{linkcolor=red,citecolor=green,filecolor=cyan,urlcolor=magenta}
+%%
+%% will change the color of the internal links to red, the links to the
+%% bibliography to green, the file links to cyan, and the external links to
+%% magenta. Additional information on \hyperref options can be found here:
+%% https://www.tug.org/applications/hyperref/manual.html#x1-40003
+%%
+%% Note that in v6.3 "bookmarks" has been changed to "true" in hyperref
+%% to improve the accessibility of the compiled pdf file.
+%%
+%% If you want to create your own macros, you can do so
+%% using \newcommand. Your macros should appear before
+%% the \begin{document} command.
+%%
+\newcommand{\vdag}{(v)^\dagger}
+\newcommand\aastex{AAS\TeX}
+\newcommand\latex{La\TeX}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\degree}{^\circ}
+\newcommand{\RA}{\alpha}
+\newcommand{\Dec}{\delta}
+
+
+%% Reintroduced the \received and \accepted commands from AASTeX v5.2
+%\received{March 1, 2021}
+%\revised{April 1, 2021}
+%\accepted{\today}
+
+%% Command to document which AAS Journal the manuscript was submitted to.
+%% Adds "Submitted to " the argument.
+%\submitjournal{PSJ}
+
+%% For manuscript that include authors in collaborations, AASTeX v6.31
+%% builds on the \collaboration command to allow greater freedom to 
+%% keep the traditional author+affiliation information but only show
+%% subsets. The \collaboration command now must appear AFTER the group
+%% of authors in the collaboration and it takes TWO arguments. The last
+%% is still the collaboration identifier. The text given in this
+%% argument is what will be shown in the manuscript. The first argument
+%% is the number of author above the \collaboration command to show with
+%% the collaboration text. If there are authors that are not part of any
+%% collaboration the \nocollaboration command is used. This command takes
+%% one argument which is also the number of authors above to show. A
+%% dashed line is shown to indicate no collaboration. This example manuscript
+%% shows how these commands work to display specific set of authors 
+%% on the front page.
+%%
+%% For manuscript without any need to use \collaboration the 
+%% \AuthorCollaborationLimit command from v6.2 can still be used to 
+%% show a subset of authors.
+%
+%\AuthorCollaborationLimit=2
+%
+%% will only show Schwarz & Muench on the front page of the manuscript
+%% (assuming the \collaboration and \nocollaboration commands are
+%% commented out).
+%%
+%% Note that all of the author will be shown in the published article.
+%% This feature is meant to be used prior to acceptance to make the
+%% front end of a long author article more manageable. Please do not use
+%% this functionality for manuscripts with less than 20 authors. Conversely,
+%% please do use this when the number of authors exceeds 40.
+%%
+%% Use \allauthors at the manuscript end to show the full author list.
+%% This command should only be used with \AuthorCollaborationLimit is used.
+
+%% The following command can be used to set the latex table counters.  It
+%% is needed in this document because it uses a mix of latex tabular and
+%% AASTeX deluxetables.  In general it should not be needed.
+%\setcounter{table}{1}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% The following section outlines numerous optional output that
+%% can be displayed in the front matter or as running meta-data.
+%%
+%% If you wish, you may supply running head information, although
+%% this information may be modified by the editorial offices.
+%\shorttitle{AASTeX v6.3.1 Sample article}
+%\shortauthors{Schwarz et al.}
+%%
+%% You can add a light gray and diagonal water-mark to the first page 
+%% with this command:
+%% \watermark{text}
+%% where "text", e.g. DRAFT, is the text to appear.  If the text is 
+%% long you can control the water-mark size with:
+%% \setwatermarkfontsize{dimension}
+%% where dimension is any recognized LaTeX dimension, e.g. pt, in, etc.
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% Add any packages as needed
+\usepackage{amsmath}
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\graphicspath{{./}{figures/}}
+%% This is the end of the preamble.  Indicate the beginning of the
+%% manuscript itself with \begin{document}.
+
+\begin{document}
+
+\title{Determining the Distance of DY Pegasi}
+
+%% LaTeX will automatically break titles if they run longer than
+%% one line. However, you may use \\ to force a line break if
+%% you desire. In v6.31 you can include a footnote in the title.
+
+%% A significant change from earlier AASTEX versions is in the structure for 
+%% calling author and affiliations. The change was necessary to implement 
+%% auto-indexing of affiliations which prior was a manual process that could 
+%% easily be tedious in large author manuscripts.
+%%
+%% The \author command is the same as before except it now takes an optional
+%% argument which is the 16 digit ORCID. The syntax is:
+%% \author[xxxx-xxxx-xxxx-xxxx]{Author Name}
+%%
+%% This will hyperlink the author name to the author's ORCID page. Note that
+%% during compilation, LaTeX will do some limited checking of the format of
+%% the ID to make sure it is valid. If the "orcid-ID.png" image file is 
+%% present or in the LaTeX pathway, the OrcID icon will appear next to
+%% the authors name.
+%%
+%% Use \affiliation for affiliation information. The old \affil is now aliased
+%% to \affiliation. AASTeX v6.31 will automatically index these in the header.
+%% When a duplicate is found its index will be the same as its previous entry.
+%%
+%% Note that \altaffilmark and \altaffiltext have been removed and thus 
+%% can not be used to document secondary affiliations. If they are used latex
+%% will issue a specific error message and quit. Please use multiple 
+%% \affiliation calls for to document more than one affiliation.
+%%
+%% The new \altaffiliation can be used to indicate some secondary information
+%% such as fellowships. This command produces a non-numeric footnote that is
+%% set away from the numeric \affiliation footnotes.  NOTE that if an
+%% \altaffiliation command is used it must come BEFORE the \affiliation call,
+%% right after the \author command, in order to place the footnotes in
+%% the proper location.
+%%
+%% Use \email to set provide email addresses. Each \email will appear on its
+%% own line so you can put multiple email address in one \email call. A new
+%% \correspondingauthor command is available in V6.31 to identify the
+%% corresponding author of the manuscript. It is the author's responsibility
+%% to make sure this name is also in the author list.
+%%
+%% While authors can be grouped inside the same \author and \affiliation
+%% commands it is better to have a single author for each. This allows for
+%% one to exploit all the new benefits and should make book-keeping easier.
+%%
+%% If done correctly the peer review system will be able to
+%% automatically put the author and affiliation information from the manuscript
+%% and save the corresponding author the trouble of entering it by hand.
+
+%\correspondingauthor{August Muench}
+%\email{greg.schwarz@aas.org, gus.muench@aas.org}
+
+\author{112166935}
+\author{112601517}
+\author{112695826}
+\affiliation{Department of Physics and Astronomy \\
+Stony Brook University \\
+Stony Brook, NY 11794, USA}
+
+% add more authors as necessary
+
+%% Note that the \and command from previous versions of AASTeX is now
+%% depreciated in this version as it is no longer necessary. AASTeX 
+%% automatically takes care of all commas and "and"s between authors names.
+
+%% AASTeX 6.31 has the new \collaboration and \nocollaboration commands to
+%% provide the collaboration status of a group of authors. These commands 
+%% can be used either before or after the list of corresponding authors. The
+%% argument for \collaboration is the collaboration identifier. Authors are
+%% encouraged to surround collaboration identifiers with ()s. The 
+%% \nocollaboration command takes no argument and exists to indicate that
+%% the nearby authors are not part of surrounding collaborations.
+
+%% Mark off the abstract in the ``abstract'' environment. 
+\begin{abstract}
+In this lab we observe the SX Phoenicis variable star DY Pegasi in the blue and visible bands to determine its distance, temperature, and mass. SX Phoenicis stars are easy to study because of their short periods and large magnitude fluctuations. We choose the target DY Pegasi because of its great visibility at Stony Brook University, where the observation is conducted. We observe DY Pegasi for 6 hours on a single observing night, collecting flux measurements for approximately 2.5 periods. From the flux measurements, we obtain a magnitude lightcurve of DY Pegasi that shows it oscillates as $m_V \in [9.9915, 10.5413]$ mag in the V band and $m_B \in [10.3145, 10.9759]$ in the B band. We fit Fourier series to the lightcurves to determine the period of DY Pegasi as $1.7498 \pm 0.0005$ hours. We determine the fluctuations in color index and temperature of DY Pegasi and estimate the mean effective temperature as $7666.3885$ K. We estimate the mass of DY Pegasi by plotting it on an H-R diagram with data from other investigators' use of the SYCLIST code. The mass of DY Pegasi is estimated as $1.2 - 1.5 M_\sun$. The measured period of DY Pegasi agrees with literature, as does the oscillation range of $m_B$. The average $m_V$ of DY Pegasi does not agree with literature. The effective temperature of DY Pegasi cannot be evaluated for accuracy due to an illegitimate error where the error in its measurement was not calculated. The mass of DY Pegasi cannot be evaluated for accuracy due to a systematic error where cannot precisely measure mass. The expected isochrones produced by the accepted mass, metallicity, and temperature combinations of DY Pegasi do not agree with its observed temperature and luminosity. Further investigation is needed to produce a precise measurement of the mass of DY Pegasi.
+\end{abstract}
+
+%% Keywords should appear after the \end{abstract} command. 
+%% The AAS Journals now uses Unified Astronomy Thesaurus concepts:
+%% https://astrothesaurus.org
+\keywords{Optical Astronomy (1) --- Imaging (2) --- Variable Star (3) --- Period-Luminosity Relation (4) --- IRSA (5)}
+
+% ======================================= Intro =======================================
+
+\section{Introduction} \label{sec:intro}
+
+SX Phoenicis stars are a special class of variable star named after their prototype, SX Phoenicis. They have short periods ($\approx 2$ hours) and large magnitude fluctuations ($\approx 5$ mag amplitude). DX Pegasi is an SX Phoenicis star of blue-white color in the northern-hemisphere constellation Pegasus, with a period of 1.75 hours and a magnitude of 9.95-10.70.
+
+In this lab we conduct imaging observations of DY Pegasi during 1 observation night, using a 14-inch telescope with B and V band filters. We processed and plotted the photometric data as a lightcurve to show the characteristic transit. We observe approximately 3 periods of DY Pegasi. We convert the observed blue and visible fluxes to magnitudes using flux calibration over a known reference star. We plot lightcurves of apparent magnitude vs. phase (periodograms) for both the blue and visible filtered data. We perform a Fourier transform on the lightcurves of DY Pegasi to determine its period. 
+
+The purpose of this lab is to determine the distance to DY Pegasi. WWe use the calculated period and a known period-luminosity relation to determine the luminosity and absolute magnitude of DY Pegasi \citep{Cohen_Sarajedini_2012}. We use the apparent and absolute magnitudes, and correct for interstellar reddening, to determine the distance of DY Pegasi. We compare this result to the literature value of $407 \pm 7$ pc \citep{Hintz_2004}.
+
+\section{Source Selection} \label{sec:source}
+
+We select DY Pegasi as our variable star due to its ease of observation. DY Pegasi is the brightest SX Phoenicis variable star that is visible in the northern hemisphere in autumn.
+
+We obtain the coordinates and magnitude of our target star from the SIMBAD catalog. Using the coordinates of the star, we obtain a finder chart from AAVSO and an object altitude chart from StarAlt  in order to plan our observation. We determine that DY Pegasi will culminate at about $65\degree$ in altitude in October-November at about 21:00 local time. It will remain above $30\degree$ until about 2:00 local time, after which images from the star will be unreliable due to excessive atmospheric seeing.
+
+% ================================= Data Acquisition =================================
+
+\section{Data Acquisition} \label{sec:observation}
+
+% --------------------------------------- Setup --------------------------------------
+
+\subsection{Setup}
+
+DY Pegasi has coordinates $(\RA, \Dec) = (23:08:51, 17:12:56)$. We used the B and V filters, and we took approximately 500 images at 30 s exposure.
+
+We used an exposure time of 30 seconds for our observations, as we used the telescope mount's built-in tracking rather than the AutoGuider and PHDGuide tracking software. Without the AutoGuider to precisely track our target star, the telescope's native tracking tends to drift by a small amount over time, thereby causing the image to blur over long exposure times. This limited our exposure time to 30 seconds.
+
+DY Pegasi has a surface temperature of 7660 K \citep{Hintz_2004}, so its peak wavelength is $\approx 380$ nm. Therefore, we used the B and V filters to conduct observations.
+
+We used the Mount Stony Brook Observatory at Stony Brook University, a 14-inch telescope. We used the STL-1001E CCD camera to take images of the target star. We connected the Astronomy lab laptop to the telescope and used the Cartes du Ciel software to control the position of the telescope.
+
+% -------------------------------------- Procedure -------------------------------------
+
+\subsection{Procedure}
+
+We conducted our observations on the night of 2022-10-21 06:00 PM to 2022-10-22 02:30 AM local Mean Solar Time. Our target culminated at approximately 9:00 PM. We began our target observations just after twilight at 7:30 PM and ended our observations at approximately 02:30 AM. Our target remained above $30\degree$ until 2:30, after which the high airmass would produce atmospheric seeing effects that would add significant statistical error to flux measurements (\citet{vdl_2022_4}, \citet{vdl_2022}). The observing night was clear, and 0\% of observing time was lost to clouds. We opened the doors and dome hatch to equalize temperatures inside the dome with outside, and hence mitigate seeing. \citep{vdl_2022_2}
+
+We slewed the telescope to our target star using Cartes du Ciel and adjusted its precise position using the hand pad. We used the finder scope and CCD finder charts for guidance. Upon identifying our star, we synced Cartes du Ciel, then set the telescope to track the star and focused the camera to obtain clear images of the star field. We took test exposures such that the brightest star in the telescope field (also the target star) showed approximately 20,000-30,000 counts in its brightest pixels. Above 35,000 counts, the CCD behavior becomes nonlinear; it is desirable to have counts in the linear regime of the CCD. These test exposures showed the desired counts, so we kept the 30 s exposure time.
+
+Throughout the night, we monitored the position of DY Pegasi in the CCD image. We adjusted the position of the telescope between exposures to keep the target star centered, thereby correcting the telescope tracking drift. We monitored the counts in our target star to remain within the 20,000-30,000 counts range; we planned to shorten the exposure time if the counts were too high, and vice versa. Throughout the night, the counts in the target star remained in the desired range, so we kept the exposure time at a constant 30 s. In addition, we periodically checked the sky for clouds and rotated the dome to maintain the telescope's clear view of the sky. We noticed no clouds or adverse weather during the observing run.
+
+After taking the science exposures, we took the calibration exposures. We took flat fields by aiming the telescope at the uniformly lit dome wall, and took 10 frames in the B filter and 10 frames in the V filter. Each B-filter flat had a 5s exposure time and each V-filter flat had a 1s exposure time in order to avoid exceeding 20,000 counts. We set the camera to take exposures repeatedly for the entire night and save each science image automatically to the laptop. We also took 10 dark frames in the V filter and 10 dark frames in the B filter, each with a 30s exposure time.
+
+At the end of the night, we transferred our darks, flats, and science images from the laptop to our personal devices, so that we could later perform data reduction and analysis.
+
+We encountered no technical difficulties during the observing run, and no time was lost to weather.
+
+% ================================= Data Reduction =================================
+
+\section{Data Reduction \label{sec:reduction}}
+
+% ------------------------- Calibration of Science Images --------------------------
+
+\subsection{Calibration of Science Images \label{subsec:calibsci}}
+
+We used only 1 exposure time for all science images: 30s. We took 10 dark frames of 30s exposure in each filter we used: B and V. For each filter, we generated the master dark frame by taking the median of the 10 dark frames. Taking the median dark frame yields a "typical" pixel reading (and hence dark current) that excludes outliers. From our master dark frames we can identify hot pixels.
+
+We took 10 flat fields for each filter. We calculated the master flat for each filter by taking the median of the flat fields and dividing by its mode. This rescales each pixel to a value between 0 and 1, indicating the relative sensitivity of each pixel. For example, we found that the center of the image was more sensitive than the edges of the image, and that certain pixels had reduced sensitivity due to light interference with dust grains.
+
+We used our master flat and master dark frames to calibrate our raw science images. We subtracted the B filter master dark from the B filter images, and the V filter master dark from the V filter images. Then we divided each dark-adjusted science image by the master flat of its corresponding filter to obtain calibrated science images. We also copied over the header from each raw science image to its corresponding calibrated science image, then generated each calibrated science image as a new file. Fig.\ \ref{fig:calsci} gives a representative calibrated science image.
+
+\begin{figure}
+\plotone{img/image251_filterblue.png}
+\caption{Representative calibrated science image of DY Pegasi and its $\sim 0.5 \degree$ neighborhood (30s exposure, B filter). Pixel colors are on the sinh scale. The image records a peak flux of $\sim 20,000$ counts for DY Pegasi. \label{fig:calsci}}
+\end{figure}
+
+% ------------------------- Source Extraction Pipeline --------------------------
+
+\subsection{Source Extraction Pipeline \label{subsec:sep}}
+
+We performed astrometric solving and source extraction in Python rather than in the terminal. We began by recording the coordinates of the target star and 10 reference stars, as shown in Table \ref{tab:starcoords}. 
+
+\begin{deluxetable}{llll}
+\tabletypesize{\scriptsize}
+% \tablewidth{0pt}
+\tablecaption{Coordinates of target star DY Pegasi and 10 reference stars \label{tab:starcoords}}
+\tablehead{
+{} & \colhead{Star} & \colhead{$\RA \; (\degree)$}& \colhead{$\Dec \; (\degree)$}
+} 
+% \colnumbers
+\startdata
+Target      & DY Pegasi           & 347.213   & 17.216 \\ 
+Reference 0 & GSC 01712-00542     & 347.215   & 17.180 \\
+Reference 1 & HD 218587           & 347.271   & 17.139 \\
+Reference 2 & GSC 01712-01246     & 347.169   & 17.137 \\
+Reference 3 & BD+16 4876          & 347.185   & 17.305 \\
+Reference 4 & TYC 1712-1110-1     & 347.340   & 17.156 \\
+Reference 5 & TYC 1712-238-1      & 347.068   & 17.225 \\
+Reference 6 & UCAC4 537-146720    & 347.124   & 17.339 \\
+Reference 7 & Unknown ($\sim 5000$ counts max) & 347.196 & 17.065 \\
+Reference 8 & Unknown ($\sim 4500$ counts max) & 347.104 & 17.152 \\
+Reference 9 & Unknown ($\sim 3500$ counts max) & 347.183 & 17.072
+\enddata
+\end{deluxetable}
+
+\begin{deluxetable}{lll}
+\tabletypesize{\scriptsize}
+% \tablewidth{0pt}
+\tablecaption{Attributes of DY Pegasi and reference stars obtained through SExtractor \label{tab:star_attributes}}
+\tablehead{
+{} & \colhead{Filters} & \colhead{Attribute}
+} 
+% \colnumbers
+\startdata
+{}          & {}    & Flux \\ 
+Target      & B,V     & Flux Error \\ 
+{}          & {}    & Observation Time (MJD) \\ 
+\hline
+{}          & {}    & Flux \\ 
+Reference 0 & B,V     & Flux Error \\ 
+{}          & {}    & Observation Time (MJD) \\
+\hline
+{}          & {}    & Flux \\ 
+Reference 1 & B,V     & Flux Error \\ 
+{}          & {}    & Observation Time (MJD) \\
+\hline
+{}          & {}    & Flux \\ 
+Reference 2 & B,V     & Flux Error \\ 
+{}          & {}    & Observation Time (MJD) \\
+\hline
+{}          & {}    & Flux \\ 
+Reference 3 & B,V     & Flux Error \\ 
+{}          & {}    & Observation Time (MJD) \\
+\hline
+{}          & {}    & Flux \\ 
+Reference 4 & B,V     & Flux Error \\ 
+{}          & {}    & Observation Time (MJD) \\
+\hline
+{}          & {}    & Flux \\ 
+Reference 5 & B,V     & Flux Error \\ 
+{}          & {}    & Observation Time (MJD) \\
+\hline
+{}          & {}    & Flux \\ 
+Reference 6 & B,V     & Flux Error \\ 
+{}          & {}    & Observation Time (MJD) \\
+\hline
+{}          & {}    & Flux \\ 
+Reference 7 & B,V     & Flux Error \\ 
+{}          & {}    & Observation Time (MJD) \\
+\hline
+{}          & {}    & Flux \\ 
+Reference 8 & B,V     & Flux Error \\ 
+{}          & {}    & Observation Time (MJD) \\
+\hline
+{}          & {}    & Flux \\ 
+Reference 9 & B,V     & Flux Error \\ 
+{}          & {}    & Observation Time (MJD) \\
+\hline
+\enddata
+\end{deluxetable}
+
+We run ASTAP on each calibrated science image to generate its astrometric solution, mapping each pixel to a corresponding $(\RA, \Dec)$ coordinate. Next we run Source Extractor (SExtractor) on our solved science images to determine the coordinates and flux of each star in our image. \citep{Bertin_Arnouts_1996} We begin by creating flux, flux error, and observation time arrays for our science star and reference stars in both the B and V filters. (Table \ref{tab:star_attributes}) We loop through the calibrated science images, and for each image we extract the header, WCS (World Coordinate System) object, and observation time. We also calculate the image background and subtract it. For each background-corrected image, we run SExtractor using a $1.5 \sigma$ detection threshold, yielding a list of objects. We calculate the total flux values of the objects using an aperture radius of 6 pixels. For each detected object in a given image, we convert its x- and y-coordinates to $\RA, \Dec$. When an object's coordinates match with those of the target star, its flux, flux error, and observation time are appended to the corresponding data arrays depending on its filter color.
+
+We repeat this procedure for each of the reference stars.
+
+\subsection{Lightcurves of Stars} \label{subsec:starlightcurve}
+
+With concatenated data arrays for the attributes given in Table \ref{tab:star_attributes}, we plot the lightcurves of the target star and reference stars. We plot separate curves for the B-filter flux values and the V-filter flux values. We add error bars to the points for the flux error values. The uncorrected lightcurves are given in Fig.\ \ref{fig:lightcurve}, with the fluctuating curves indicating the highly variable target star DY Pegasi and the flatter curves indicating the less-variable reference stars. Zooming into the interval $x\in 5.9874 \mathrm{E} 4 + [0.1, 0.15], y\in [105 \mathrm{E} 3, 120 \mathrm{E} 3]$ reveals the error bars for the target star and 1 reference star in greater detail (Fig.\ \ref{fig:lightcurve_zoomin}). As the error bars give a $1\sigma$ confidence interval of each data point, we expect the curve fits to fall within about $68\%$ or 2/3 of the data points. Therefore, the error bars in our lightcurve appear reasonable.
+
+From our reference star lightcurves, we observe that their flux tends to decrease and become more scattered later in the night. This is because our observed sky region was becoming lower in the sky throughout the observing night, and hence atmospheric seeing effects tended to increase over time. We account for this effect in our target star flux values by creating a normalized reference star lightcurve.
+
+\begin{figure}
+\plotone{img/lightcurves_all.png}
+\caption{Lightcurves of reference stars and target star, with varying vertical offsets for clarity. Target star DY Pegasi shows much greater variations in flux than the reference stars. \label{fig:lightcurve}}
+\end{figure}
+
+\begin{figure}
+\plotone{img/lightcurves_errorbar.png}
+\caption{Lightcurves of reference stars and 1 selected target star, zoomed in on the interval ($x\in 5.9874 \cdot 10^4 + [0.1, 0.15], y\in [105 \cdot 10^3, 120 \cdot 10^3]$) to show error bars in greater detail. \label{fig:lightcurve_zoomin}}
+\end{figure}
+
+We create a normalized reference star lightcurve from the raw reference star lightcurves in Fig.\ \ref{fig:lightcurve}. We create arrays of normalized flux and flux error for the B and V filters (Table \ref{tab:refstar_norm}. We normalize each reference star's flux and flux error by its mean flux, then concatenate these normalized values to the arrays of normalized flux and flux error. The normalized reference star lightcurve is given in the B and V filters (Fig.\ \ref{fig:lightcurve_refnormBV}).
+
+\begin{deluxetable}{ll}
+\tabletypesize{\scriptsize}
+% \tablewidth{0pt}
+\tablecaption{Concatenated reference star attributes used to construct normalized reference star lightcurve. \label{tab:refstar_norm}}
+\tablehead{
+\colhead{Filter} & \colhead{Attribute}
+} 
+% \colnumbers
+\startdata
+{}    & Normalized Flux \\ 
+B     & Normalized Flux Error \\ 
+{}    & Observation Time (MJD) \\ 
+\hline
+{}    & Normalized Flux \\ 
+V     & Normalized Flux Error \\ 
+{}    & Observation Time (MJD) \\
+\hline
+\enddata
+\end{deluxetable}
+
+\begin{figure}
+\plotone{img/lightcurves_refnormB.png}
+\plotone{img/lightcurves_refnormV.png}
+\caption{Normalized reference star lightcurves in the B and V filters. \label{fig:lightcurve_refnormBV}}
+\end{figure}
+
+By visual inspection of the normalized reference star lightcurves (Fig.\ \ref{fig:lightcurve_refnormBV}), we identify the outlier points. Using the grid lines as a guide, we determine outliers to be in the regions as defined in Table \ref{tab:outliercuts}. The normalized reference star lightcurves with outliers excised are given in Fig.\ \ref{fig:lightcurve_refnormV_outliernone} and  \ref{fig:lightcurve_refnormB_outliernone}.
+
+
+\begin{deluxetable}{lll}
+\tabletypesize{\scriptsize}
+% \tablewidth{0pt}
+\tablecaption{Outlier regions, to be excised from the normalized reference star lightcurves. (Fig.\ \ref{fig:lightcurve_refnormBV}) \label{tab:outliercuts}}
+
+\tablehead{
+\colhead{Filter} & \colhead{x-range} & \colhead{y-range}
+} 
+% \colnumbers
+
+\startdata
+V  & $0.100 < x$ & $1.045 < y$ \\ 
+\hline
+{} & $0.150 < x$ & $1.150 < y$ \\ 
+B  & $x < 0.100$ & $y < 0.900$ \\ 
+{} & $x < 0.225$ & $y < 0.800$ \\ 
+\hline
+\enddata
+\tablecomments{x-range values are defined as offsets from $+5.9874\times 10^4$.}
+\end{deluxetable}
+
+\begin{figure}
+\plotone{img/lightcurves_refnormV_outliernone.png}
+\caption{Normalized reference star lightcurves, with outliers removed (V filter). \label{fig:lightcurve_refnormV_outliernone}}
+\end{figure}
+
+\begin{figure}
+\plotone{img/lightcurves_refnormB_outliernone.png}
+\caption{Normalized reference star lightcurves, with outliers removed (B filter). \label{fig:lightcurve_refnormB_outliernone}}
+\end{figure}
+
+\subsection{Master Reference Star Lightcurve} \label{subsec:masterref_lightcurve}
+
+We construct the reference lightcurve across all images by taking the weighted mean of all reference stars for each image. For example, for a given image $i$, we calculate the weighted mean flux from all $j$ reference stars as $\mu_i$ and the error of this weighted mean as $\sigma_i$ (Eq. \ref{eqn:ref_star_mean}, \ref{eqn:ref_star_mean_err}). The weight factor of $1/\sigma_j^2$ indicates that data points with larger error have a greater contribution to the mean flux.
+
+\begin{eqnarray}
+\mu_i^{\text{ref}} = \frac{\sum_j f_j^{\text{ref}}/(\sigma_j^{\text{ref}})^2}{\sum_j 1/(\sigma_j^{\text{ref}})^2} \label{eqn:ref_star_mean} \\
+\sigma_i^{\text{ref}} = \sqrt{ \frac{1}{\sum_j 1/(\sigma_j^{\text{ref}})^2} } \label{eqn:ref_star_mean_err}
+\end{eqnarray}
+
+We concatenate these weighted mean flux and error values to yield arrays of weighted mean flux and error for both the B and V filters. We plot these flux values with respect to observation date to yield the master reference lightcurves for the B and V filters (Fig.\ \ref{fig:lightcurve_masterref}).
+
+\begin{figure}
+\plotone{img/lightcurves_masterref.png}
+\caption{Normalized reference star lightcurves, for both V and B filters. The mean flux values in each image tend to decrease later in the observing night. \label{fig:lightcurve_masterref}}
+\end{figure}
+
+\subsection{Calibrating Stars With Master Reference Lightcurve}\label{subsec:calibstars_masterrefcurve}
+
+We need to correct the changing flux in DY Pegasi for the trend in average reference star flux over time. That is, we "flatten" the DY Pegasi lightcurve by removing long-term seeing effects. This ensures that the variations in the flux of DY Pegasi are as intrinsic as possible. For each image $i$, we divide the flux of the target star by the weighted mean flux of the reference stars (\S \ref{subsec:masterref_lightcurve}) to obtain a normalized target flux $r_i$ (Eq. \ref{eqn:fluxnorm_target}, \ref{eqn:finalflux_sci}, \ref{eqn:finalflux_ref}). We obtain the error in this normalized target flux $\sigma_{r_i}$ using Eq. \ref{eqn:fluxnormerr_target}. Our resulting normalized lightcurve for DY Pegasi is given by Fig.\ \ref{fig:normlightcurve_target}.
+
+\begin{eqnarray}
+    r_i &=& \frac{f_i^{\text{ref}}}{\mu_i^{\text{ref}}} \label{eqn:fluxnorm_target} \\
+    \sigma_{r_i} &=& r \sqrt{ \left( \frac{\sigma_f}{f} \right) ^2 + \left( \frac{\sigma_\mu}{\mu} \right) ^2 } \label{eqn:fluxnormerr_target}
+\end{eqnarray}
+
+
+\begin{eqnarray}
+    &\text{Corrected Normalized DY Peg lightcurve} \nonumber \\
+    &= \frac{ \text{Normalized DY Peg lightcurve} }{ \text{Master reference star lightcurve} } \label{eqn:finalflux_sci} \\
+    &\text{Corrected Normalized reference star \textit{i} lightcurve} \nonumber \\
+    &= \frac{ \text{Normalized reference star \textit{i} lightcurve} }{ \text{Master reference star lightcurve} } \label{eqn:finalflux_ref}
+\end{eqnarray}
+
+\begin{figure}
+\plotone{img/normlightcurve_target.png}
+\caption{Normalized DY Pegasi lightcurves, corrected for long-term overall trend in mean reference star flux (Fig.\ \ref{fig:lightcurve_masterref}, \S \ref{subsec:masterref_lightcurve}). \label{fig:normlightcurve_target}}
+\end{figure}
+
+\subsection{Flux-Magnitude Calibration and Apparent Magnitude \label{subsec:fluxmagcal}}
+
+We convert the flux values of DY Pegasi to magnitude values using a flux-magnitude calibration. We use the APASS photometric catalog\footnote{\url{https://www.aavso.org/aavso-photometric-all-sky-survey-data-release-1}} applied to our science images. APASS only shows a blue magnitude but no visible magnitude for the brightest star in our target field. Therefore, we use different stars for the blue and  visual magnitude-flux calibrations. With DY Pegasi being the 2nd-brightest star in the field, we use the brightest star for the blue magnitude calibration and the 3rd-brightest star for the visual magnitude calibration. (Table \ref{tab:fluxcalstars}) We apply the flux calibration procedure (Eq. \ref{eqn:fluxratio} - \ref{eqn:fluxcal}) to determine the apparent magnitude of DY Pegasi in the B and V bands.
+
+We calculate the flux ratio of DY Pegasi:
+\begin{eqnarray}
+\mathrm{flux \ ratio} &\equiv& \frac{f}{f_0} \label{eqn:fluxratio} \\
+\sigma_{f/f_0} &=& \frac{f}{f_0} \sqrt{ \left( \frac{\sigma_f}{f} \right)^2 + \left( \frac{\sigma_{f_0}}{f_0} \right)^2 }
+\end{eqnarray}
+
+where $f_0 \pm \sigma_{f0}$ is the reference star flux and $f \pm \sigma_f$ is the target star flux. Using this flux ratio, we use the definition of stellar magnitude \citep{vdl_2022_2} to calculate the apparent magnitude of the target star for each image.
+\begin{eqnarray}
+    m &=& (-100)^{0.2} \log_{10} \left( \frac{f}{f_0} \right) + m_0 \\
+    \sigma_m &=& (-100)^{0.2} \log_{10} \left( \frac{f}{f_0} - \sigma_{f/f_0} \right) \label{eqn:fluxcal} \\
+    &\ & + (m_0 - m)
+\end{eqnarray}
+
+where $f_0$ and $m_0$ respectively are the given luminosity and magnitude of the calibration reference star. Applying the flux calibration procedure to the array of fluxes for DY Pegasi transforms its flux coordinates to magnitude coordinates. This results in our true lightcurve of DY Pegasi (Fig.\ \ref{fig:lightcurvemag_dypeg}). 
+
+\begin{deluxetable}{lll}
+\tabletypesize{\scriptsize}
+% \tablewidth{0pt}
+\tablecaption{Flux-magnitude calibration reference stars. \label{tab:fluxcalstars}}
+
+\tablehead{
+\colhead{EM Wave Band} & \colhead{Star} & \colhead{Magnitude}
+} 
+% \colnumbers
+
+\startdata
+$B$   & HD 218587 & $10.381$ \\ 
+\hline
+$V$   & GSC 01712-00542 & $11.871$ \\ 
+\hline
+\enddata
+
+\tablecomments{Reference stars 1 and 0 (Table \ref{tab:starcoords}), respectively.}
+\end{deluxetable}
+
+Using the NASA/IPAC Infrared Science Archive (IRSA)\footnote{ \url{https://irsa.ipac.caltech.edu/frontpage/} }, we determine the interstellar extinction magnitude values for DY Pegasi (Table \ref{tab:extinctvals}). We apply this extinction correction to the flux-magnitude calibration to obtain the true apparent magnitude lightcurves of DY Pegasi (Fig.\ \ref{fig:lightcurvemag_dypeg}).
+
+\begin{deluxetable}{ll}
+\tabletypesize{\scriptsize}
+% \tablewidth{0pt}
+\tablecaption{Magnitude increases due to interstellar extinction along line-of-sight from DY Pegasi. \label{tab:extinctvals}}
+
+\tablehead{
+\colhead{EM Wave Band}  & \colhead{Magnitude Increase, $A$}
+} 
+% \colnumbers
+
+\startdata
+$V$   & $0.411$ \\ 
+\hline
+$B+V$ & $0.133$ \\ 
+\hline
+$B$   & $0.544$ \\ 
+\hline
+\enddata
+
+\tablecomments{$A_B = A_V + A_{B+V}$.}
+\end{deluxetable}
+
+\begin{figure}[t]
+\plotone{img/lightcurvemag_dypeg.png}
+\caption{Normalized DY Pegasi lightcurves showing change in magnitude over time, with flux-magnitude calibration applied to Fig.\ \ref{fig:normlightcurve_target}. \label{fig:lightcurvemag_dypeg}}
+\end{figure}
+
+% ================================ Analysis and Discussion ================================
+
+\section{Results and Analysis} \label{sec:analysis}
+
+% ----------------------------------------- Period ----------------------------------------
+
+\subsection{Period\label{subsec:period}}
+
+With the true lightcurve of DY Pegasi (\S \ref{subsec:fluxmagcal}), we determine the period. A qualitative inspection of the lightcurve gives a period estimate of approximately 0.05-0.10 days. Performing a Fourier transform on the lightcurve will result in a spectrum of periods, with multiple local maxima. From the Fourier transform, we can identify the peak corresponding to the 0.05-0.10 day expected period.
+
+We use the Period detection and Identification Pipeline Suite (PIPS)\footnote{Source: \url{https://pypi.org/project/astroPIPS/}}\footnote{Documentation: \url{https://pips.readthedocs.io/en/latest/index.html}} package in the Python programming language \citep{Murakami_2022} to determine the period of DY Pegasi. PIPS takes a 2D array of the star observation times and magnitudes as its input and generates a Fourier-likelihood (FL) periodogram for the data. PIPS samples the data in period space and fits a Fourier series to determine the most likely period for the data.
+
+Using PIPS, we obtain periodograms for both the B and V band lightcurve data. (Fig.\ \ref{fig:periodogram}) Each periodogram shows a spectrum of periods with power, or relative likelihood.
+
+We also use the PIPS package to curve-fit a periodic signal to the DY Pegasi flux data. (Fig.\ \ref{fig:curvefitBV}) We determine the period of DY Pegasi as shown by Table \ref{tab:period} $P_V = 0.07289 \pm 0.00003 \mathrm{d}$ for the V band and $P_B = 0.07292 \pm 0.00001 \mathrm{d}$ for the B band.
+
+\begin{figure}
+\plotone{img/periodogram.png}
+\caption{Periodograms of DY Pegasi variability in B and V bands. The periodograms show agreement, as expected of lightcurves taken of the same star. \label{fig:periodogram}}
+\end{figure}
+
+\begin{figure}
+\plotone{img/curvefitV.png}
+\plotone{img/curvefitB.png}
+\plotone{img/curvefitBV.png}
+
+\caption{Periodic Fourier series signals (6 terms) fitted to the B and V band lightcurves. \label{fig:curvefitBV}}
+\end{figure}
+
+\begin{deluxetable}{llll}
+\tabletypesize{\scriptsize}
+% \tablewidth{0pt}
+\tablecaption{Period of DY Pegasi determined by Fourier series curve-fitting of B and V band lightcurves with PIPS. The periods show agreement, indicating that PIPS is reliable for determining period. \label{tab:period}}
+
+\tablehead{
+{} & \colhead{Band}  & {} &  \colhead{Period, $P$ (days) }
+} 
+% \colnumbers
+
+\startdata
+{} & $V$   & {} &  $0.07289 \pm 0.00003$ \\ 
+\hline
+{} & $B$   & {} &  $0.07292 \pm 0.00001$ \\ 
+\hline
+\enddata
+
+\end{deluxetable}
+
+% ------------------------------- Period-Luminosity Relation -------------------------------
+
+\subsection{Absolute Magnitude and Period-Luminosity Relation\label{subsec:periodlum_absmag}}
+
+The period-luminosity relation for SX Phoenicis variable stars is taken from \citet{Cohen_Sarajedini_2012}. We apply this to the SX Phoenicis star DY Pegasi (Eq. \ref{eqn:periodlum}) to calculate its absolute bolometric magnitude and uncertainty. In the period-luminosity relation, we use the visible-magnitude period $P_V$ (Table \ref{tab:period}) as our period.
+
+\begin{eqnarray}
+    M_V = -1.640 - 3.389 \log P_f \\
+    M = -1.640 - 3.389 \log P_f - 0.12 \label{eqn:periodlum}
+\end{eqnarray}
+
+where $P_f$ is the period of DY Pegasi and $M_V$ is its absolute magnitude in the visible band. We add a bolometric correction factor of $-0.12$ to obtain the bolometric absolute magnitude. We propagate the period uncertainty $\sigma_{P_f}$ to absolute magnitude uncertainty $\sigma_M$ using the error propagation equation (Eq. \ref{eqn:periodlum_uncert}).
+
+\begin{eqnarray}
+    &\sigma_M& \nonumber \\
+    &=& \sqrt{0.110^2 + \left( 3.389 \ln(10) \cdot \frac{\sigma_{P_f}}{P_f} \right)^2 + 0.104^2}
+                \label{eqn:periodlum_uncert}
+\end{eqnarray}
+
+Therefore, we obtain an absolute bolometric magnitude of $M = 2.094 \pm 0.151$ for DY Pegasi. Using the bolometric magnitude $M$ we calculate the luminosity $L$ of DY Pegasi (Eq. \ref{eqn:maglum}) as $L = 11.200 \ L\sun$.
+
+\begin{eqnarray}
+    L = 10 ^ {\left( 100^{-1/5} (4.73 - M) \right)} \ L_\sun \label{eqn:maglum}
+\end{eqnarray}
+
+% ---------------------------------- Apparent Magnitude ----------------------------------
+
+\subsection{Apparent Magnitude and Distance\label{subsec:distance}}
+
+We calculate the average visible magnitude $\overline{m}$ of DY Pegasi by taking the mean of the periodogram curve fit (Fig.\ \ref{fig:curvefitBV}) for the V band. The uncertainty of the average visible magnitude is given by Eq. \ref{eqn:appmag_uncert}, where $\overline{\sigma_m} = 0.007$ is the mean of the magnitude uncertainty of DY Pegasi in every image, and where and $N_y = 1000$ is the number of y-coordinates generated by the curve fit of the visible magnitude lightcurve.
+
+\begin{eqnarray}
+    \sigma_{\overline{m}} = \overline{\sigma_m} / \sqrt{N_y}  \label{eqn:appmag_uncert}
+\end{eqnarray}
+
+We obtain an average visible apparent magnitude of $10.3316 \pm 0.0002$ for DY Pegasi. Using the bolometric absolute magnitude $M \pm \sigma_M$ and visible apparent magnitude $\overline{m} \pm \sigma_{\overline{m}}$, and applying the visible interstellar extinction correction $A_V = 0.411$, we calculate the distance $d$ to DY Pegasi and its uncertainty (Eq. \ref{eqn:distance}, \ref{eqn:distance_uncert}).
+
+\begin{eqnarray}
+    d &=& 10^{(\overline{m} - M + 5 - A_V) / 5} \label{eqn:distance}\\
+    \sigma_d &=& \frac{d\ln(10)}{5} \sqrt{ \sigma_{\overline{m}}^2 + \sigma_M^2 } \label{eqn:distance_uncert}
+\end{eqnarray}
+
+The distance to DY Pegasi is $347.721 \pm 24.247 \ \mathrm{pc}$.
+
+% ---------------------------------- Color Index and Temperature ----------------------------------
+
+\subsection{Color and Temperature\label{subsec:color_temperature}}
+
+The color index $B-V$ of a star denotes its color \citep{Fitzgerald_1970}. We obtain the periodogram of $B-V$ by subtracting the periodograms of the blue and visible lightcurves (Fig.\ \ref{fig:colorindexcurve}). The color index $B-V$ of DY Pegasi, and hence its color, varies over time. 
+
+\begin{figure}
+\plotone{img/periodogram_color.png}
+\caption{There is a gap in the $B-V$ periodogram due to the blue and visible lightcurves having different curve fits (Fig.\ \ref{fig:curvefitBV}). \label{fig:colorindexcurve}}
+\end{figure}
+
+\citet{Ballesteros_2012} gives the temperature of We derive the temperature of the star according to Eq. \ref{eqn:ballesteros}. Eq. \ref{eqn:ballesteros_extinct} gives the temperature formula with $A_{B-V}$ extinction correction.
+
+\begin{equation}\label{eqn:ballesteros}
+\begin{split}
+    T = 4600 &\Bigg( \frac{1}{0.92(B-V) + 1.7} \\
+                & + \frac{1}{0.92(B-V) + 0.62} \Bigg)
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split} \label{eqn:ballesteros_extinct}
+    T = 4600 &\Bigg( \frac{1}{0.92(B-V - A_{B-V}) + 1.7} \\
+                & + \frac{1}{0.92(B-V - A_{B-V}) + 0.62} \Bigg)
+\end{split}
+\end{equation}
+
+Applying Ballesteros' formula to the color index plot (Fig.\ \ref{fig:colorindexcurve}) yields a periodogram plot of DY Pegasi temperature $T$ (Fig.\ \ref{fig:periodogram_tempcurve}). The temperature follows a nearly identical qualitative trend with the color index. The average temperature of DY Pegasi is calculated as $T = 7666.389 \mathrm{K}$. We did not calculate uncertainty for $T$.
+
+\begin{figure}
+\plotone{img/periodogram_temp.png}
+\caption{Periodogram of DY Pegasi temperature. The temperature follows a similar trend to the color index. \label{fig:periodogram_tempcurve}}
+\end{figure}
+
+% ---------------------------------- Mass Estimation -------------------------------
+
+\subsection{Mass Estimation} \label{subsec:mass}
+
+We estimate the mass of DY Pegasi by comparing to isochrones generated by stellar evolutionary models. \citet{Xue_2020} use several possible metallicities $Z = 0.001, 0.002, 0.004$ and rotation speeds $v_{eq} = 26 \ \mathrm{km \ s}^{-1}, 150 \ \mathrm{km \ s}^{-1}$ as input for such models. We use output data from \citet{Eggenberger_2021}, who fed the parameters $Z = 0.002, 0.006$ and $v_{eq} = 26 \ \mathrm{km \ s}^{-1}, 150 \ \mathrm{km \ s}^{-1}$ into the stellar evolutionary code SYCLIST provided by the University of Geneva.\footnote{\url{https://www.unige.ch/sciences/astro/evolution/fr/base-de-donnees/}}
+
+We plot H-R diagrams of the output data for $Z = 0.002$, with temperature $\log(T)$ on the x-axis and luminosity $\log(L/L_\sun)$ on the y-axis. (Fig.\ \ref{fig:hrdiagram}) The fluctuations of DY Pegasi occur between the 1.5$M_\sun$ and $1.2M_\sun$ isochrones for both possible rotation speeds of 23.6 km/s and 150 km/s. Therefore, our mass estimate of DY Pegasi is $M = 1.2-1.5 M_\sun$.
+
+\begin{figure}
+\plotone{img/hrdiagram_veq23.6.png}
+\plotone{img/hrdiagram_veq150.png}
+\caption{H-R diagrams of DY Pegasi and several mass-dependent stellar evolution isochrones, for $v_{eq} = 23.6$ km/s and $v_{eq} = 150$ km/s. The luminosity and temperature fluctuations of DY Pegasi are indicated indicated by the solid line, while the isochrones are indicated by the dashed lines. \label{fig:hrdiagram}}
+\end{figure}
+
+% ============================= Agreement with Literature =============================
+
+\section{Discussion} \label{subsec:discussion}
+
+\subsection{Literature Comparison}
+
+\paragraph{Distance} Our investigation finds a distance to DY Pegasi of $d = 347.721 \pm 24.247 \ \mathrm{pc}$. The distance of DY Pegasi given by the SIMBAD catalog is $d_0 = 406.702 \pm 7.4764 \ \mathrm{pc}$. The significance of our result is given in units of $\sigma$ by Eq. \ref{eqn:significance_period} \citep{vdl_2022}:
+
+\begin{equation} \label{eqn:significance_period}
+    \frac{ |347.721 - 406.702| }{ \sqrt{ 24.247^2 + 7.4764^2 } } = 2.32 \sigma
+\end{equation}
+
+This is below the $3\sigma$ significance threshold for our distance differing from the literature distance. Therefore, our estimate of distance for DY Pegasi agrees with literature.
+
+\paragraph{Pulsation period} We determine a pulsation period of $P_V = 0.07289 \pm 0.00003 \ \mathrm{d}$ in the V band and
+$P_B = 0.07292 \pm 0.00002 \mathrm{d}$ in the B band. We calculate the mean pulsation period $P$ of DY Pegasi as the mean of the blue and visible periods. We calculate the uncertainty on the mean pulsation period through Eq. \ref{eqn:uncert_period}.
+
+\begin{eqnarray} \label{eqn:uncert_period}
+    \sigma_P &=& \frac{1}{2} \sqrt{\sigma_{P_V}^2 + \sigma_{P_B}^2} \\
+    \sigma_p &\approx& 0.00002
+\end{eqnarray}
+
+Our calculated value of pulsation period for DY Pegasi is $0.07291 \pm 0.00002 \ \mathrm{d}$, or $1.7498 \pm 0.0005$ hours. The literature period of DY Pegasi 1.75 hours. \citep{2017_catalog} Our result has a significance of $0.4\sigma$, indicating that it agrees with literature. 
+
+\paragraph{Magnitude} We obtain the apparent magnitudes of DY Pegasi through the Fourier series curve fit described in \S \ref{subsec:period} and Fig.\ \ref{fig:periodogram}. Our data show that the apparent magnitude of DY Pegasi fluctuates as follows: $m_V \in [9.9915, 10.5413], m_B \in [10.3145, 10.9759]$. 
+
+The literature apparent magnitude of DY Pegasi in the V band is $m_V \in [9.95, 10.62]$ \citep{2017_catalog}, with an average of $\overline{m_V} = 10.26$ (SIMBAD). Our apparent $m_V$ fluctuation range does not agree with literature. Our calculated average apparent visual magnitude is $\overline{m_V} = 10.3316 \pm 0.0002$, which has a significance of $358\sigma$. Therefore, our average apparent magnitude does not agree with literature. 
+
+\paragraph{Temperature} Our estimated temperature for DY Pegasi is $T = 7666.389 \ \mathrm{K}$, with no calculation for uncertainty. The literature temperature of DY Pegasi is $7660 \pm 100 \ \mathrm{K}$ \citep{Hintz_2004}. Since we do not have a calculation for the uncertainty of our temperature measurement, we cannot calculate its significance level and cannon evaluate its agreement with literature.
+
+\paragraph{Mass} Our estimated mass range of DY Pegasi is $1.2-1.5M_\sun$. \citet{Hintz_2004} finds a mass of $1.54M_\sun$ for DY Pegasi, while a more recent finding by \citet{Barcza_2014} yields a mass of $1.4M_\sun$. The accepted literature mass of DY Pegasi falls in our estimated mass range. However, further investigation is necessary to obtain a more precise mass estimate and evaluate agreement with literature.
+
+Our photometric results of luminosity and temperature of DY Pegasi agree with the literature values presented by \citet{Xue_2020}. However, the observed luminosity and temperature of DY Pegasi are higher than expected for its calculated mass based on H-R diagram tracks. \citet{Xue_2020} estimate the mass of DY Pegasi by investigating the harmonics of the radial oscillation modes of DY Pegasi. They plot the log ratio of the 1st harmonic period $P_1$ and the fundamental period $P_0$ with respect to the fundamental period, or $\log(P_1 / P_0)$ vs $P_0$ (cf. Petersen diagram). This relationship is expected to evolve over the lifetime of a star. \citet{Xue_2020} plots several Petersen evolution curves that contain the period harmonic values of DY Pegasi. (Fig.\ \ref{fig:petersen}) These evolution curves correspond to combinations of mass and rotation speed (Fig.\ \ref{fig:xue2020_hrdiagram}).
+
+\begin{figure}
+\plotone{img/xue2020_petersen.jpg}
+\caption{Petersen diagram of DY Pegasi. \citep{Xue_2020} \label{fig:petersen}}
+\end{figure}
+
+\begin{figure}
+\plotone{img/xue2020_hrdiagram.jpg}
+\caption{H-R diagram of several isochrones calculated from prediction parameters for DY Pegasi (mass, metallicity, rotation speed), overlaid with its observed temperature and luminosity range (dotted line). \citep{Xue_2020} \label{fig:xue2020_hrdiagram}}
+\end{figure}
+
+These mass and rotation speed combinations correspond to certain H-R diagram isochrones. However, none of these isochrones agree with the observed luminosity and temperature range of DY Pegasi. Therefore, the authors hypothesize the existence of a hot companion of DY Pegasi that contributes temperature and luminosity to DY Pegasi. The authors hope that such a companion would explain the discrepancy of DY Pegasi from its predicted position on the H-R diagram and hence its predicted mass.
+
+Through spectroscopy of DY Pegasi, the authors detect an excess of calcium, an element produced in the asymptotic giant branch of a star. Therefore, the companion of DY Peg is likely to be a white dwarf.
+
+\subsection{Sources of error}
+
+\paragraph{Statistical error} Atmospheric seeing contributes to the noise in each star flux data point and differences in flux over time. We began observation when DY Pegasi was approximately $60\degree$ in altitude, and we terminated observation when it reached $30\degree$ in altitude to mitigate seeing due to excessive airmass. Before calibration with the master reference lightcurve (\S \ref{subsec:masterref_lightcurve} - \ref{subsec:calibstars_masterrefcurve}), all stars decrease in flux over time as their altitude decreases and the telescope observes them through increasing airmass. In addition, atmospheric weather and temperature patterns result in variations in the opacity and density of the atmosphere, contributing to seeing. We attempt to mitigate atmospheric seeing by observing on a cloudless night leaving the telescope dome open to equalize temperature with the outside air. The seeing-induced noise results in error in the apparent magnitude, absolute magnitude, and distance measurements of DY Pegasi.
+
+\paragraph{Systematic error} There is uncertainty in the PIPS algorithm fit of the Fourier series to the signal of DY Pegasi due to the small number of points and the short time period of observation. We observed only 2.5 pulsation periods of DY Pegasi. Our Fourier fit would be more accurate if we observed more periods of DY Pegasi, which would require multiple observing nights. However, we could only observe on 1 night due to time constraints. The uncertainty of the Fourier series curve fit results in the error in the period of DY Pegasi.
+
+Our investigation yields only a rough estimate of mass. Due to the flux variability and hence luminosity and temperature variability of DY Pegasi, the SYCLIST stellar evolution code used to plot luminosity vs.\ temperature for DY Pegasi on the H-R diagram shows it oscillating between several stellar isochrones instead of approximating any 1 particular isochrone. Therefore, our current methods cannot be used to yield a precise estimate of the mass of DY Pegasi.
+
+\paragraph{Illegitimate error} We did not calculate an uncertainty for our measurement of DY Pegasi temperature $T$ because we did not derive the formula for $\sigma_T$. Withou an uncertainty in our measurement of $T$, we are unable to determine its significance with respect to the literature temperature of $T = 7660 \pm 100$ \citep{Hintz_2004} and cannot evaluate its agreement with literature. This error in our data analysis procedure renders our measurement of DY Pegasi temperature $T$ invalid.
+
+% ===================================== Conclusion =====================================
+
+\section{Conclusion} \label{sec:conclusion} %
+
+The purpose of this investigation is to estimate the distance and mass of DY Pegasi. The periodograms of DY Pegasi for the B and V magnitudes agree qualitatively with literature \citep{Xue_2020}. Our calculated pulsation period of $1.7498 \pm 0.0005$ hours for DY Pegasi agrees with the literature period of 1.75 hours. \citep{2017_catalog} Our data show that the magnitude of DY Pegasi fluctuate as $m_V \in [9.9915, 10.5413], m_B \in [10.3145, 10.9759]$. The fluctuation range for $m_B$ agrees with literature, and the average for $m_V$ agrees with literature. Our calculated distance of $d = 347.721 \pm 24.247 \ \mathrm{pc}$ for DY Pegasi agrees with the literature value of $d_0 = 406.702 \pm 7.4764 \ \mathrm{pc}$. Our estimated temperature of $7666.3885$ K is invalid due to an illegitimate error where we did not calculate its uncertainty. Therefore, we are unable to compare it with the literature value of $7660 \pm 100$ K. Our estimated mass range for DY Pegasi is $M \in [1.2, 1.5] M_\sun$, which contains the literature mass of $1.40 M_\sun$ but not $1.54 M_\sun$. The hypothesized literature combinations of mass, metallicity, and rotation rate of DY Pegasi calculated through stellar evolution models predict luminosities and temperatures of DY Pegasi that do not agree with observed temperatures and luminosities. The results of this investigation are limited by the short observation time, and the strength of the periodic curve fit is limited by the low number of periods. Further investigation is needed to obtain a more precise mass estimate of DY Pegasi and confirm the existence and radiative properties of the companion of DY Pegasi.
+
+\section{Acknowledgements} \label{sec:acknow}
+\begin{acknowledgments}
+We thank the Stony Brook University Department of Physics and Astronomy for offering the AST 443 course and providing the equipment used to conduct observations. We thank TAs Ben Levine and Aaron Meuninghoff for providing guidance before and during our observing sessions and feedback regarding our data reduction and analysis. We thank Prof. von der Linden for teaching the AST 443 course and instructing us in the fundamentals of astronomical observation, computing, data analysis, and scientific report writing.
+
+This research has made use of the APASS database, located at the AAVSO web site. Funding for APASS has been provided by the Robert Martin Ayers Sciences Fund.
+
+This research has made use of the NASA/IPAC Infrared Science Archive, which is funded by the National Aeronautics and Space Administration and operated by the California Institute of Technology.
+\end{acknowledgments}
+
+%% To help institutions obtain information on the effectiveness of their 
+%% telescopes the AAS Journals has created a group of keywords for telescope 
+%% facilities.
+%
+%% Following the acknowledgments section, use the following syntax and the
+%% \facility{} or \facilities{} macros to list the keywords of facilities used 
+%% in the research for the paper.  Each keyword is check against the master 
+%% list during copy editing.  Individual instruments can be provided in 
+%% parentheses, after the keyword, but they are not verified.
+
+\vspace{5mm}
+\facilities{Stony Brook University, University of Geneva, IRSA, AAVSO}
+
+%% Similar to \facility{}, there is the optional \software command to allow 
+%% authors a place to specify which programs were used during the creation of 
+%% the manuscript. Authors should list each code and include either a
+%% citation or url to the code inside ()s when available.
+
+\software{astropy \citep{2013A&A...558A..33A,2018AJ....156..123A},
+          Source Extractor \citep{1996A&AS..117..393B},
+          SIMBAD \citep{SIMBAD_2000},
+          StarAlt \citep{méndez_sorensen_azzaro_2002},
+          AAVSO \citep{aavso},
+          DS9 \citep{joye_mandel_2003},
+          Cartes du Ciel \citep{chevalley_2019},
+          PIPS \citep{Murakami_2022},
+          SYCLIST \citep{Eggenberger_2021},
+          APASS (AAVSO),
+          IRSA (NASA)
+          }
+
+% ==================== Appendix ====================
+
+% \appendix
+
+%% For this sample we use BibTeX plus aasjournals.bst to generate the
+%% the bibliography. The sample631.bib file was populated from ADS. To
+%% get the citations to show in the compiled file do the following:
+%%
+%% pdflatex sample631.tex
+%% bibtext sample631
+%% pdflatex sample631.tex
+%% pdflatex sample631.tex
+
+% --- References ---
+
+\bibliography{main}{}
+\bibliographystyle{aasjournal}
+
+%% This command is needed to show the entire author+affiliation list when
+%% the collaboration and author truncation commands are used.  It has to
+%% go at the end of the manuscript.
+%\allauthors
+
+%% Include this line if you are using the \added, \replaced, \deleted
+%% commands to see a summary list of all changes at the end of the article.
+%\listofchanges
+
+\end{document}
+
+% End of file `sample631.tex'.

@@ -1,0 +1,500 @@
+%% AASTeX requires revtex4-1.cls and other external packages such as
+%% latexsym, graphicx, amssymb, longtable, and epsf.  Note that as of 
+%% Oct 2020, APS now uses revtex4.2e for its journals but remember that 
+%% AASTeX v6+ still uses v4.1. All of these external packages should 
+%% already be present in the modern TeX distributions but not always.
+%% For example, revtex4.1 seems to be missing in the linux version of
+%% TexLive 2020. One should be able to get all packages from www.ctan.org.
+%% In particular, revtex v4.1 can be found at 
+%% https://www.ctan.org/pkg/revtex4-1.
+
+%% The first piece of markup in an AASTeX v6.x document is the \documentclass
+%% command. LaTeX will ignore any data that comes before this command. The 
+%% documentclass can take an optional argument to modify the output style.
+%% The command below calls the preprint style which will produce a tightly 
+%% typeset, one-column, single-spaced document.  It is the default and thus
+%% does not need to be explicitly stated.
+%%
+%% using aastex version 6.3
+\documentclass[twocolumn]{aastex631}
+
+%% The default is a single spaced, 10 point font, single spaced article.
+%% There are 5 other style options available via an optional argument. They
+%% can be invoked like this:
+%%
+%% \documentclass[arguments]{aastex631}
+%% 
+%% where the layout options are:
+%%
+%%  twocolumn   : two text columns, 10 point font, single spaced article.
+%%                This is the most compact and represent the final published
+%%                derived PDF copy of the accepted manuscript from the publisher
+%%  manuscript  : one text column, 12 point font, double spaced article.
+%%  preprint    : one text column, 12 point font, single spaced article.  
+%%  preprint2   : two text columns, 12 point font, single spaced article.
+%%  modern      : a stylish, single text column, 12 point font, article with
+%% 		  wider left and right margins. This uses the Daniel
+%% 		  Foreman-Mackey and David Hogg design.
+%%  RNAAS       : Supresses an abstract. Originally for RNAAS manuscripts 
+%%                but now that abstracts are required this is obsolete for
+%%                AAS Journals. Authors might need it for other reasons. DO NOT
+%%                use \begin{abstract} and \end{abstract} with this style.
+%%
+%% Note that you can submit to the AAS Journals in any of these 6 styles.
+%%
+%% There are other optional arguments one can invoke to allow other stylistic
+%% actions. The available options are:
+%%
+%%   astrosymb    : Loads Astrosymb font and define \astrocommands. 
+%%   tighten      : Makes baselineskip slightly smaller, only works with 
+%%                  the twocolumn substyle.
+%%   times        : uses times font instead of the default
+%%   linenumbers  : turn on lineno package.
+%%   trackchanges : required to see the revision mark up and print its output
+%%   longauthor   : Do not use the more compressed footnote style (default) for 
+%%                  the author/collaboration/affiliations. Instead print all
+%%                  affiliation information after each name. Creates a much 
+%%                  longer author list but may be desirable for short 
+%%                  author papers.
+%% twocolappendix : make 2 column appendix.
+%%   anonymous    : Do not show the authors, affiliations and acknowledgments 
+%%                  for dual anonymous review.
+%%
+%% these can be used in any combination, e.g.
+%%
+%% \documentclass[twocolumn,linenumbers,trackchanges]{aastex631}
+%%
+%% AASTeX v6.* now includes \hyperref support. While we have built in specific
+%% defaults into the classfile you can manually override them with the
+%% \hypersetup command. For example,
+%%
+%% \hypersetup{linkcolor=red,citecolor=green,filecolor=cyan,urlcolor=magenta}
+%%
+%% will change the color of the internal links to red, the links to the
+%% bibliography to green, the file links to cyan, and the external links to
+%% magenta. Additional information on \hyperref options can be found here:
+%% https://www.tug.org/applications/hyperref/manual.html#x1-40003
+%%
+%% Note that in v6.3 "bookmarks" has been changed to "true" in hyperref
+%% to improve the accessibility of the compiled pdf file.
+%%
+%% If you want to create your own macros, you can do so
+%% using \newcommand. Your macros should appear before
+%% the \begin{document} command.
+%%
+\newcommand{\vdag}{(v)^\dagger}
+\newcommand\aastex{AAS\TeX}
+\newcommand\latex{La\TeX}
+
+%% Reintroduced the \received and \accepted commands from AASTeX v5.2
+%\received{March 1, 2021}
+%\revised{April 1, 2021}
+%\accepted{\today}
+
+%% Command to document which AAS Journal the manuscript was submitted to.
+%% Adds "Submitted to " the argument.
+%\submitjournal{PSJ}
+
+%% For manuscript that include authors in collaborations, AASTeX v6.31
+%% builds on the \collaboration command to allow greater freedom to 
+%% keep the traditional author+affiliation information but only show
+%% subsets. The \collaboration command now must appear AFTER the group
+%% of authors in the collaboration and it takes TWO arguments. The last
+%% is still the collaboration identifier. The text given in this
+%% argument is what will be shown in the manuscript. The first argument
+%% is the number of author above the \collaboration command to show with
+%% the collaboration text. If there are authors that are not part of any
+%% collaboration the \nocollaboration command is used. This command takes
+%% one argument which is also the number of authors above to show. A
+%% dashed line is shown to indicate no collaboration. This example manuscript
+%% shows how these commands work to display specific set of authors 
+%% on the front page.
+%%
+%% For manuscript without any need to use \collaboration the 
+%% \AuthorCollaborationLimit command from v6.2 can still be used to 
+%% show a subset of authors.
+%
+%\AuthorCollaborationLimit=2
+%
+%% will only show Schwarz & Muench on the front page of the manuscript
+%% (assuming the \collaboration and \nocollaboration commands are
+%% commented out).
+%%
+%% Note that all of the author will be shown in the published article.
+%% This feature is meant to be used prior to acceptance to make the
+%% front end of a long author article more manageable. Please do not use
+%% this functionality for manuscripts with less than 20 authors. Conversely,
+%% please do use this when the number of authors exceeds 40.
+%%
+%% Use \allauthors at the manuscript end to show the full author list.
+%% This command should only be used with \AuthorCollaborationLimit is used.
+
+%% The following command can be used to set the latex table counters.  It
+%% is needed in this document because it uses a mix of latex tabular and
+%% AASTeX deluxetables.  In general it should not be needed.
+%\setcounter{table}{1}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% The following section outlines numerous optional output that
+%% can be displayed in the front matter or as running meta-data.
+%%
+%% If you wish, you may supply running head information, although
+%% this information may be modified by the editorial offices.
+%\shorttitle{AASTeX v6.3.1 Sample article}
+%\shortauthors{Schwarz et al.}
+%%
+%% You can add a light gray and diagonal water-mark to the first page 
+%% with this command:
+%% \watermark{text}
+%% where "text", e.g. DRAFT, is the text to appear.  If the text is 
+%% long you can control the water-mark size with:
+%% \setwatermarkfontsize{dimension}
+%% where dimension is any recognized LaTeX dimension, e.g. pt, in, etc.
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% Add any packages as needed
+\usepackage{amsmath}
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\graphicspath{{./}{figures/}}
+%% This is the end of the preamble.  Indicate the beginning of the
+%% manuscript itself with \begin{document}.
+
+\begin{document}
+
+\title{Observation of HD 189733 b Exoplanet Transit}
+
+%% LaTeX will automatically break titles if they run longer than
+%% one line. However, you may use \\ to force a line break if
+%% you desire. In v6.31 you can include a footnote in the title.
+
+%% A significant change from earlier AASTEX versions is in the structure for 
+%% calling author and affiliations. The change was necessary to implement 
+%% auto-indexing of affiliations which prior was a manual process that could 
+%% easily be tedious in large author manuscripts.
+%%
+%% The \author command is the same as before except it now takes an optional
+%% argument which is the 16 digit ORCID. The syntax is:
+%% \author[xxxx-xxxx-xxxx-xxxx]{Author Name}
+%%
+%% This will hyperlink the author name to the author's ORCID page. Note that
+%% during compilation, LaTeX will do some limited checking of the format of
+%% the ID to make sure it is valid. If the "orcid-ID.png" image file is 
+%% present or in the LaTeX pathway, the OrcID icon will appear next to
+%% the authors name.
+%%
+%% Use \affiliation for affiliation information. The old \affil is now aliased
+%% to \affiliation. AASTeX v6.31 will automatically index these in the header.
+%% When a duplicate is found its index will be the same as its previous entry.
+%%
+%% Note that \altaffilmark and \altaffiltext have been removed and thus 
+%% can not be used to document secondary affiliations. If they are used latex
+%% will issue a specific error message and quit. Please use multiple 
+%% \affiliation calls for to document more than one affiliation.
+%%
+%% The new \altaffiliation can be used to indicate some secondary information
+%% such as fellowships. This command produces a non-numeric footnote that is
+%% set away from the numeric \affiliation footnotes.  NOTE that if an
+%% \altaffiliation command is used it must come BEFORE the \affiliation call,
+%% right after the \author command, in order to place the footnotes in
+%% the proper location.
+%%
+%% Use \email to set provide email addresses. Each \email will appear on its
+%% own line so you can put multiple email address in one \email call. A new
+%% \correspondingauthor command is available in V6.31 to identify the
+%% corresponding author of the manuscript. It is the author's responsibility
+%% to make sure this name is also in the author list.
+%%
+%% While authors can be grouped inside the same \author and \affiliation
+%% commands it is better to have a single author for each. This allows for
+%% one to exploit all the new benefits and should make book-keeping easier.
+%%
+%% If done correctly the peer review system will be able to
+%% automatically put the author and affiliation information from the manuscript
+%% and save the corresponding author the trouble of entering it by hand.
+
+%\correspondingauthor{August Muench}
+%\email{greg.schwarz@aas.org, gus.muench@aas.org}
+
+\author{112166935}
+\author{112601517}
+\author{112695826}
+\affiliation{Department of Physics and Astronomy \\
+Stony Brook University \\
+Stony Brook, NY 11794, USA}
+
+% add more authors as necessary
+
+%% Note that the \and command from previous versions of AASTeX is now
+%% depreciated in this version as it is no longer necessary. AASTeX 
+%% automatically takes care of all commas and "and"s between authors names.
+
+%% AASTeX 6.31 has the new \collaboration and \nocollaboration commands to
+%% provide the collaboration status of a group of authors. These commands 
+%% can be used either before or after the list of corresponding authors. The
+%% argument for \collaboration is the collaboration identifier. Authors are
+%% encouraged to surround collaboration identifiers with ()s. The 
+%% \nocollaboration command takes no argument and exists to indicate that
+%% the nearby authors are not part of surrounding collaborations.
+
+%% Mark off the abstract in the ``abstract'' environment. 
+\begin{abstract}
+We conducted optical imaging observations of a transit of the exoplanet HD 189733 b. The observations occurred on the night of 2022-08-31 to 2022-09-01 at Mount Stony Brook Observatory, Stony Brook University, Stony Brook, NY 11794, USA. We used the B-band filter for our telescope. We measured a transit depth of $2.35 \pm 0.17 \%$ and a transit duration of $1.68 \pm 0.24$ hours. The transit was observed to begin on 2022-08-31 22:48 and end on 2022-09-01 00:29.
+\end{abstract}
+
+%% Keywords should appear after the \end{abstract} command. 
+%% The AAS Journals now uses Unified Astronomy Thesaurus concepts:
+%% https://astrothesaurus.org
+\keywords{Optical Astronomy (1) --- Exoplanet (2) --- Transit (3) --- Imaging (4)}
+
+\section{Introduction} \label{sec:intro}
+
+Extrasolar planets, also known as exoplanets, are planets that orbit stars other than the Sun. Exoplanets have been discovered and studied using a variety of techniques, such as radial velocity, transit, and direct imaging.  HD 189733 b is a frequently studied exoplanet due to its host star brightness and large transit depth \citep{Cauley_2017}. 
+
+In this lab we observed a transit of the exoplanet HD 189733 b through a B-band filter. Using a CCD, we collected light from the source star, HD 189733, as well as neighboring stars. We processed and plotted the photometric data as a lightcurve to show the characteristic transit. From the transit lightcurve, we calculated the transit depth. We calculated other properties of the exoplanet, namely planet-to-star radius ratio and transit duration. The purpose of this lab was to confirm the transit of HD 189733 b predicted to occur on the night of 2022-08-31 22:54 to 2022-09-01 00:40 local Mean Solar Time \citep{ipac_2022}, and to measure the transit depth cited to be 2.4\% \citep{Cauley_2017}.
+
+\section{Source Selection} \label{sec:source}
+
+We select HD 189733 as our star and HD 189733 b as our exoplanet. We gather preliminary data about our star and planet from the SIMBAD and exoplanet.eu catalogs, such as coordinates, magnitude, and transit date. Using the coordinates of the star, we obtain a finder chart from AAVSO (Figure \ref{fig:finder}) and an object altitude chart from StarAlt (Figure \ref{fig:staralt}) in order to plan our observation. We used the Transit Predictor Tool from Caltech \citep{ipac_2022} to determine the observation date and times. We selected 2022-08-31 to 2022-09-01 as our observation date.
+
+\begin{figure}[ht!]
+\plotone{finder5degree.png}
+\caption{$5^\circ$ Finding chart for HD 189733 \label{fig:finder}}
+\end{figure}
+
+\begin{figure}[ht!]
+\plotone{staralt_20220831.png}
+\caption{Altitude chart for HD 189733 on 2022-08-31 \label{fig:staralt}}
+\end{figure}
+
+\pagebreak
+
+\section{Data Acquisition (Procedure)} \label{sec:observation}
+
+We conducted our observations on the night of 2022-08-31 21:58 to 2022-09-01 01:59. Our target culminated at approximately 21:00 local Mean Solar Time. We ended our observations at approximately 2022-09-01 02:00, when our target star altitude dipped below $30^\circ$, when high airmass produces atmospheric seeing effects that would add statistical error to flux measurements (\citet{vdl_2022_4}, \citet{vdl_2022}). We used the Mount Stony Brook Observatory, on the rooftop of the Earth and Space Sciences building at Stony Brook University. The observing night was clear and somewhat windy. We opened the doors and dome hatch to mitigate atmospheric seeing. \citep{vdl_2022_2}
+
+We connected our CCD to the telescope, powered on the CCD and telescope, and loaded up the Cartes du Ciel software on the Astronomy lab laptop. After performing a meridian flip of the telescope, we guided it to our target star using Cartes du Ciel and the hand pad. Upon identifying our star, we set the telescope to track the star and focused the camera to obtain clear images of the star field.
+
+We took test exposures such that our brightest star (also our target star) showed between 20,000 and 30,000 counts in its brightest pixel. We took 10 flat fields of the dome wall when it was uniformly lit, all with the same exposure time. Throughout the night, the camera took exposures and saved each science image automatically to the laptop. For each exposure time we used for science images, we took 10 dark frames.
+
+In the middle of our observations, we encountered technical difficulties. One of our raw science images exhibited streaking behavior, indicating that the telescope was drifting rather than tracking the star properly. After we got the telescope to track our star again, we continued taking exposures.
+
+At the end of the night, we transferred our darks, flats, and science images from the laptop to our personal devices, so that we could later perform data reduction and analysis. 602 of our 606 raw science images were used in our data analysis.
+
+\section{Data Reduction} \label{sec:reduction}
+
+We used 3 exposure times in our observations: 10s, 12s, 20s. We took 10 dark frames for each of these exposure times, and generated a master dark frame for each exposure time by taking the median of the 10 dark frames. Taking the median dark frame yields a "typical" pixel reading (and hence dark current) that excludes outliers. From our master dark frames we can identify hot pixels.
+
+We took 10 flat fields with constant exposure time. We calculated the master flat by taking the median of the flat fields and dividing by its mode. This rescales each pixel to a value between 0 and 1, indicating the relative sensitivity of each pixel. For example, we found that the center of the image was more sensitive than the edges of the image, and that certain pixels had reduced sensitivity due to dust grains interfering with light.
+
+We used our master flat and master dark frames to calibrate our raw science images. We subtracted the master darks from the science images with the corresponding exposure times. Then we divided each dark-adjusted science image by the master flat to obtain calibrated science images.
+
+We ran astrometry.net to solve each of our calibrated science images, yielding a coordinate for every pixel. We ran Source Extractor on our astrometrically solved science images to produce catalog files with star coordinates and flux counts.
+
+From our calibrated science images, we extracted flux and flux error from the corresponding catalog file based on the statistics of pixel counts in a constant region drawn around our target star. We used the Tycho catalog to select our 10 reference stars, and we extracted each reference star's flux and flux error based on their coordinates. We constructed our flux table by dividing each image's star flux value and flux error by the image's exposure time. We extracted observation dates from raw science images and converted them to Python datetime objects. We appended each image's flux, flux error, and observation date to a CSV file. 
+
+\subsection{Lightcurves of reference stars} \label{subsec:refstarlightcurve}
+
+We normalized each flux table value by the mean flux and converted each observation date to a mean julian date (MJD) float value. We plotted the relative flux values (with flux error bars) with respect to MJD (Figure \ref{fig:ref_lightcurve}). From our reference star lightcurves, we observed that their flux tended to decrease and become more scattered later in the night. This is because our observed sky region was becoming lower in the sky, and hence atmospheric seeing effects tended to increase over time. We accounted for this effect in our target star flux values as follows: 
+
+We binned the data 10 points at a time to obtain the final lightcurve of our exoplanet transit (Figure \ref{fig:transit_lightcurve_all}, \ref{fig:transit_lightcurve_binned}). Each bin in Figure \ref{fig:transit_lightcurve_binned} contains 10 data points. The value of each point in the binned lightcurve is the average of its bin, and the uncertainty of each point is the standard deviation of its bin.
+
+\begin{figure}[ht!]
+\plotone{reference_star_lightcurves.png}
+\caption{Lightcurves of reference stars and target star, with varying vertical offsets \label{fig:ref_lightcurve}}
+\end{figure}
+
+\section{Results} \label{sec:results}
+
+Upon data reduction, we obtain raw and binned transit lightcurves for HD 189733 b.
+
+\begin{figure}[htb!]
+\plotone{hd189733_lightcurve_all.png}
+\caption{Unbinned transit lightcurve of HD 189733 b \label{fig:transit_lightcurve_all}}
+\end{figure}
+
+\begin{figure}[htb!]
+\plotone{New_Binned_HD189733_Light_Curve.png}
+\caption{Binned transit lightcurve of HD 189733 b \label{fig:transit_lightcurve_binned}}
+\end{figure}
+
+\begin{figure}[htb!]
+\plotone{lightcurve_corrected_variability.png}
+\caption{Unbinned transit lightcurve of HD 189733 b, adjusted for decreasing linear trend of data \label{fig:transit_lightcurve_all_var}}
+\end{figure}
+
+\begin{figure}[htb!]
+\plotone{lightcurve_corrected_variability_binned.png}
+\caption{Binned transit lightcurve of HD 189733 b, adjusted for decreasing linear trend of data \label{fig:transit_lightcurve_binned_var}}
+\end{figure}
+
+\pagebreak
+
+\section{Analysis and Discussion} \label{sec:analysis}
+
+\subsection{Baseline Flux} \label{subsec:baseline_flux}
+
+The flux of HD 189733 is markedly different after the transit than before the transit. Namely, HD 189733 is dimmer after its transit than before its transit. A possible explanation for this observation is that HD 189733 is a variable star of the type BY Draconis \citep{SIMBAD_HD189733}. We correct for this variation in baseline flux by fitting a straight line to our data, then dividing by the straight-line fit. After correcting for the linear trend of the data, we obtain the variation-adjusted raw and binned lightcurve data for HD 189733 b in Figures \ref{fig:transit_lightcurve_all_var} and \ref{fig:transit_lightcurve_binned_var}.
+
+\subsection{Transit Detection} \label{subsec:transit_detection}
+
+Qualitatively, the transit lightcurve of HD 189733 b agrees with expectation. We expect a dip in the relative flux of the star HD 189733 as HD 189733 b transits, which is what we observe. 
+
+We calculated the unweighted means of the binned data in the 3 time intervals in our data: before transit, during transit, after transit. We determined the mean pre-transit flux, denoted $f_{0,binned} = 1.0001 \pm 0.0009$, the mean post-transit flux, denoted $f_{2,binned} = 1.0001 \pm 0.0012$, and the mean during-transit flux, denoted $f_{1,binned} = 0.9766 \pm 0.0015$. We calculated the transit depth $\delta$ using Equation \ref{eqn:transit_depth} and the uncertainty $\sigma_\delta$ using Equation \ref{eqn:transit_depth_uncert} and obtain $\delta = 0.0235 = 2.35 \pm 0.0017 \%$. 
+
+If our star has a flux of $0.9766\pm 0.0017$ during transit, and a baseline flux of $1.0001$, the significance of our transit is $13.82\sigma$ \ref{eqn:significance}. This exceeds the $3\sigma$ detection threshold \citep{vdl_2022}, so we successfully detected a transit of HD 189733 b.
+
+With our measured transit depth of $2.35 \pm 0.17 \%$ and an accepted transit depth of $2.40 \%$ \citep{Cauley_2017}, we calculate a significance of $0.29\sigma$ (Equation \ref{eqn:significance}) with respect to literature, which is less than $3\sigma$. Hence our measurement of transit depth agrees with literature.
+
+\subsection{Planet Radius} \label{subsec:planetrad}
+
+Based on our transit depth of $2.35\%$, we calculate the planet-to-star radius ratio as 0.153 (Equation \ref{eqn:transit_depth_radius_ratio}). We calculate the uncertainty in our planet-to-star radius ratio as 0.006 (\ref{eqn:transit_depth_radius_ratio_uncert}). Therefore, our planet-to-star radius ratio is $0.153 \pm 0.006$. The radius ratio from literature is $0.155$ \citep{sing_2009}, so our planet-to-star radius ratio measurement has a significance of $0.33\sigma$ (Equation \ref{eqn:significance}).
+
+Our calculated planet-to-star radius ratio is $0.153 \pm 0.006$, and the literature planet-to-star radius radio is 0.155, yielding a significance of $0.33\sigma$. Our significance is less than $3\sigma$, so our planet-to-star radius ratio agrees with literature.
+
+\subsection{Transit Duration} \label{subsec:duration}
+
+By inspection of binned transit lightcurve data, we determine that the transit for HD 189733 b occurs from MJD $2.95 + 5.982 \times 10^4 = 59822.95$ to $3.02 + 5.982 \times 10^4 = 59823.02$, yielding a duration of $0.07$ days. Converted to ISO time, our transit occurred from 2022-08-31 22:48 to 2022-09-01 00:29, which agrees with the predicted transit time of 2022-08-31 22:54 to 2022-09-01 00:40.
+
+Our transit duration is $0.07$ days, and its uncertainty is about $0.01$ days. Therefore, our measurement of transit duration is $0.07\pm 0.01$ days, or $1.68 \pm 0.24$ hours. The accepted transit duration of HD 189733 b is $1.827 \pm 0.029$ hours \citep{Winn_2007}. The significance of our transit duration is $0.68\sigma$ (Equation \ref{eqn:significance}), so our transit duration agrees with the literature.
+% or $1.8$ hours \citep{kasper_2018}
+
+\section{Conclusion} \label{sec:conclusion}
+
+We observed a transit of HD 189733 b. Our transit depth was calculated as $2.35\pm 0.17\%$ and determined to be a significant detection. Our transit depth agrees with the accepted transit depth of $2.40\%$. From our transit depth measurement we calculated the planet-to-star radius ratio as $0.153 \pm 0.006$, which agrees with the accepted radius ratio of 0.155. Our measured transit duration of $1.68 \pm 0.24$ hours agrees with the accepted transit duration of $1.827 \pm 0.029$ hours. 
+
+The decrease in the flux of HD 189733 after accounting for transit can possibly be explained by the star's variability as a BY Draconis Variable. 
+
+We encountered technical difficulties with telescope tracking during our series of observations. We spent approximately 30 minutes to restore the telescope alignment, resulting in an approximately 30-minute break in observations shortly after the transit ended. In addition, our later raw science images registered counts significantly lower than 10,000 counts in the brightest star (our science star) and hence resulted in systematic error in our data by decreasing signal-to-noise ratio. Our target for exposures was approximately 20,000 counts per pixel in the brightest star. We should have increased the exposure time to increase the counts in the brightest star back to 20,000, and hence increase signal-to-noise ratio and reduce systematic error in our flux data. \citep{vdl_2022_4}
+
+Approximately 40 of our 600 images ($7\%$) were taken after 01:45, when our target star dipped below $30^\circ$ altitude. Hence, approximately 7\% of our exposures, have additional statistical error in flux measurements.
+
+\section{Acknowledgements} \label{sec:acknow}
+\begin{acknowledgments}
+We thank the Stony Brook University Department of Physics and Astronomy for offering the AST 443 course and providing the equipment used to conduct observations. We thank TAs Ben Levine and Aaron Meuninghoff for providing guidance before and during our observing sessions and feedback regarding our data reduction and analysis. We thank Prof. von der Linden for teaching the AST 443 course and instructing us in the fundamentals of astronomical observation, computing, data analysis, and scientific report writing.
+\end{acknowledgments}
+
+%% To help institutions obtain information on the effectiveness of their 
+%% telescopes the AAS Journals has created a group of keywords for telescope 
+%% facilities.
+%
+%% Following the acknowledgments section, use the following syntax and the
+%% \facility{} or \facilities{} macros to list the keywords of facilities used 
+%% in the research for the paper.  Each keyword is check against the master 
+%% list during copy editing.  Individual instruments can be provided in 
+%% parentheses, after the keyword, but they are not verified.
+
+\vspace{5mm}
+\facilities{Mount Stony Brook Observatory (SBU):14in}
+
+%% Similar to \facility{}, there is the optional \software command to allow 
+%% authors a place to specify which programs were used during the creation of 
+%% the manuscript. Authors should list each code and include either a
+%% citation or url to the code inside ()s when available.
+
+\software{astropy \citep{2013A&A...558A..33A,2018AJ....156..123A},
+          Source Extractor \citep{1996A&AS..117..393B}
+          SIMBAD \citep{SIMBAD_2000},
+          Exoplanet.eu,
+          StarAlt \citep{méndez_sorensen_azzaro_2002},
+          AAVSO \citep{aavso},
+          DS9 \citep{joye_mandel_2003},
+          Cartes du Ciel \citep{chevalley_2019},
+          Transit Predictor Tool \citep{ipac_2022}
+          }
+
+\appendix
+\section{Calculations}
+
+\subsection{Determining target star lightcurve}
+
+For each image $i$, we calculate the weighted mean of the normalized fluxes (\ref{subsec:refstarlightcurve}) of reference stars (of index $j$):
+\begin{equation}\label{eqn:ref_star_mean}
+\mu_i^{\text{ref}} = \frac{\sum_j f_j^{\text{ref}}/(\sigma_j^{\text{ref}})^2}{\sum_j 1/(\sigma_j^{\text{ref}})^2}
+\end{equation}
+and the error on the weighted mean:
+\begin{equation}\label{eqn:ref_star_mean_err}
+    \sigma_i^{\text{ref}} = \sqrt{ \frac{1}{\sum_j 1/(\sigma_j^{\text{ref}})^2} }
+\end{equation}
+
+For each image $i$, we normalize the flux of the target star by the weighted mean flux of the reference stars to obtain $r_i$:
+\begin{equation}
+    r_i = \frac{f_i^{\text{ref}}}{\mu_i^{\text{ref}}}
+\end{equation}
+and error of $r_i$:
+\begin{equation}
+    \sigma_{r_i} = r \sqrt{ \left( \frac{\sigma_f}{f} \right) ^2 + \left( \frac{\sigma_\mu}{\mu} \right) ^2 }
+\end{equation}
+
+Next, we calculate the baseline flux of the target star by averaging the normalized fluxes (\ref{subsec:refstarlightcurve}) before and after the transit. We divide every $r_i$, $\sigma_{r_i}$ by this baseline flux and plot the $r_i$ values with error bars with respect to observation time (MJD).
+
+\subsection{Transit depth}
+
+We calculated transit depth from binned data. Given an average pre-transit flux $f_{0,binned}$, post-transit flux $f_{2,binned}$, and during-transit flux $f_{1,binned}$, we calculate transit depth $\delta$ as follows:
+
+\begin{equation} \label{eqn:transit_depth}
+    \delta = \frac{1}{2} (f_{0,binned} + f_{2,binned}) - f_{1,binned}
+\end{equation}
+
+Based on initial uncertainties $\sigma_{f0, binned}, \sigma_{f2, binned}, \sigma_{f1, binned}$ in pre-transit, post-transit, and during-transit flux measurements, respectively, we propagate these uncertainties to determine the uncertainty in the transit depth $\sigma_\delta$:
+
+\begin{equation} \label{eqn:transit_depth_uncert}
+    \sigma_\delta^2 = \frac{1}{4} (\sigma_{f0, binned}^2 + \sigma_{f2, binned}^2) + \sigma_{f2, binned}^2
+\end{equation}
+
+\subsection{Planet-to-star radius radio from transit depth}
+
+\begin{equation} \label{eqn:transit_depth_radius_ratio}
+    \delta = \frac{R_p^2}{R_*^2}
+\end{equation}
+
+where $R_p$ is planet radius and $R_*$ is star radius \citep{transit_algorithms_2020}.
+
+Uncertainty in planet-to-star radius ratio $\sigma_{Rp/R*}$ is propagated from uncertainty in transit depth $\sigma_\delta$ as follows:
+
+\begin{equation} \label{eqn:transit_depth_radius_ratio_uncert}
+    \sigma_{Rp/R*} = \frac{\sigma_\delta}{2\sqrt{\delta}} = \frac{\sigma_\delta}{2(R_p/R_*)}
+\end{equation}
+
+\subsection{Significance of results}
+
+Given our measurement result $x_1\pm \sigma_{x_1}$ and the literature value $x_2\pm \sigma_{x_2}$, we calculate the significance of our result in units of $\sigma$: \citep{vdl_2022}
+
+\begin{equation} \label{eqn:significance}
+    \frac{ |x_1 - x_2| }{ \sqrt{ \sigma_{x_1}^2 + \sigma_{x_2}^2 } }
+\end{equation}
+
+\section{Supplementary material}
+
+Our source code is the Jupyter Notebook file 'Lab 2 - Group Code - FINAL.ipynb'. Our flux tables are the CSV files with filename '4.3\_*\_time\_flux.csv'.
+
+% Refer to something.pdf for the source code and something.csv for the flux table data.
+
+%% For this sample we use BibTeX plus aasjournals.bst to generate the
+%% the bibliography. The sample631.bib file was populated from ADS. To
+%% get the citations to show in the compiled file do the following:
+%%
+%% pdflatex sample631.tex
+%% bibtext sample631
+%% pdflatex sample631.tex
+%% pdflatex sample631.tex
+
+% --- References ---
+
+\bibliography{sample631}{}
+\bibliographystyle{aasjournal}
+
+%% This command is needed to show the entire author+affiliation list when
+%% the collaboration and author truncation commands are used.  It has to
+%% go at the end of the manuscript.
+%\allauthors
+
+%% Include this line if you are using the \added, \replaced, \deleted
+%% commands to see a summary list of all changes at the end of the article.
+%\listofchanges
+
+\end{document}
+
+% End of file `sample631.tex'.
